@@ -19,6 +19,9 @@ on:
       - 'images/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   validate-markdown:
     name: Validate Markdown Files
