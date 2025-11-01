@@ -179,4 +179,4 @@ Your content is ready when:
 
 **Remember:** Quality and accuracy are paramount. Take your time to ensure all requirements are met before publication.
 
-**Last Updated:** November 2025
+**Last Updated:** November 2024

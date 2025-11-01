@@ -89,8 +89,8 @@ jobs:
         for file in $(find . -name '*.md' -not -path './node_modules/*'); do
           echo "Checking links in $file..."
           
-          # Extract relative links (excluding external URLs)
-          grep -oP '\[.*?\]\(\K[^)http][^)]*' "$file" | while read -r link; do
+          # Extract relative links (excluding external URLs) using process substitution
+          while read -r link; do
             # Remove anchor tags
             clean_link=$(echo "$link" | sed 's/#.*//')
             
@@ -98,7 +98,7 @@ jobs:
               echo "ERROR: Broken link in $file: $link"
               ERRORS=$((ERRORS + 1))
             fi
-          done
+          done < <(grep -oP '\[.*?\]\(\K[^)http][^)]*' "$file" 2>/dev/null || true)
         done
         
         if [ $ERRORS -gt 0 ]; then
@@ -196,7 +196,7 @@ jobs:
         )
         
         for pattern in "${PATTERNS[@]}"; do
-          if grep -rin "$pattern" . --exclude-dir=.git --exclude-dir=node_modules --exclude="*.yml" --exclude="*.yaml"; then
+          if grep -rin "$pattern" . --exclude-dir=.git --exclude-dir=node_modules --exclude="*.yml" --exclude="*.yaml" --exclude="content-validation.yml"; then
             echo "⚠️ Warning: Found potential sensitive pattern: $pattern"
             ISSUES=$((ISSUES + 1))
           fi

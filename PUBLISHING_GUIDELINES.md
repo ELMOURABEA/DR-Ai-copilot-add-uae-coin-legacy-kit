@@ -212,11 +212,11 @@ Updates or revisions may be required when:
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
-| 1.0.0 | Nov 2025 | Initial publishing guidelines created | Project Team |
+| 1.0.0 | Nov 2024 | Initial publishing guidelines created | Project Team |
 
 ---
 
 **Important:** These guidelines must be followed for all official government submissions. Non-compliance may result in delays or rejection of submissions.
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2024  
 **Next Review:** Quarterly or as needed

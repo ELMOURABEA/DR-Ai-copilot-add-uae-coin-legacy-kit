@@ -236,6 +236,6 @@ Your contributions help preserve and celebrate the UAE's remarkable journey and 
 
 ---
 
-**Last Updated:** November 2025
+**Last Updated:** November 2024
 
 For any questions about these guidelines, please open an issue or refer to the [PUBLISHING_GUIDELINES.md](PUBLISHING_GUIDELINES.md).
