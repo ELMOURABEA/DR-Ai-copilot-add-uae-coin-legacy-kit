@@ -154,11 +154,48 @@ May the spirit of the Union continue to inspire a future of unparalleled greatne
 
 ---
 
+## 📋 Review & Publication Process
+
+This project requires careful review and validation before any content is published or submitted to official UAE government channels.
+
+### Pre-Publication Requirements
+
+**Before publishing or submitting to government:**
+1. ✅ Complete all items in [REVIEW_CHECKLIST.md](REVIEW_CHECKLIST.md)
+2. ✅ Follow procedures in [PUBLISHING_GUIDELINES.md](PUBLISHING_GUIDELINES.md)
+3. ✅ Obtain all required approvals (content, technical, cultural, legal)
+4. ✅ Verify bilingual accuracy (Arabic & English)
+5. ✅ Ensure compliance with UAE government standards
+
+### Quality Assurance
+
+All content undergoes:
+- **Content Review** - Accuracy and quality verification
+- **Technical Review** - Specification and technical validation
+- **Cultural Review** - Cultural sensitivity and appropriateness
+- **Compliance Review** - Government standards and regulations
+- **Automated Validation** - CI/CD checks for basic quality standards
+
+### Documentation
+
+- [REVIEW_CHECKLIST.md](REVIEW_CHECKLIST.md) - Complete checklist for pre-publication validation
+- [PUBLISHING_GUIDELINES.md](PUBLISHING_GUIDELINES.md) - Procedures for official government submission
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Guidelines for contributing to this project
+
+---
+
 ## 📁 Repository Structure
 
 ```
 .
-├── README.md                           # This file
+├── README.md                           # This file - Project overview
+├── REVIEW_CHECKLIST.md                 # Pre-publication validation checklist
+├── PUBLISHING_GUIDELINES.md            # Official submission procedures
+├── CONTRIBUTING.md                     # Contribution guidelines
+├── .github/
+│   └── workflows/
+│       ├── content-validation.yml      # Automated content validation
+│       └── azure-webapps-node.yml      # Azure deployment workflow
 ├── images/
 │   └── design/                         # Design photos and documentation
 │       ├── README.md                   # Image documentation
@@ -171,6 +208,16 @@ May the spirit of the Union continue to inspire a future of unparalleled greatne
 ## 📧 Contact & Collaboration
 
 For inquiries about the UAE 1972–2025 Commemorative Coin Legacy Kit, minting partnerships, or official government collaboration, please reach out through official UAE government channels.
+
+### Contribution
+
+We welcome contributions that enhance the quality and accuracy of this project. Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guidelines before submitting changes.
+
+---
+
+## ⚠️ Important Notice
+
+This is an official project for the United Arab Emirates government. All content must be reviewed and approved through proper channels before publication. Please refer to [PUBLISHING_GUIDELINES.md](PUBLISHING_GUIDELINES.md) for official submission procedures.
 
 ---
 
