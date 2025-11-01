@@ -39,7 +39,7 @@ This checklist must be completed before publishing any content or submitting mat
 ### Coin Specifications
 - [ ] Material specifications are accurate
 - [ ] Dimensions and weight are verified
-- [ ] Serial number format is correct ([XXXX/2025])
+- [ ] Serial number format is correct (Format: [XXXX/YYYY] where YYYY is the commemorative year)
 - [ ] Mintage numbers are confirmed
 - [ ] Special features are accurately described
 

@@ -1,5 +1,9 @@
 # Quick Reference Guide - Review & Publishing Process
 
+This guide provides a quick overview of the essential steps and processes for reviewing and publishing content related to the UAE 1972-2025 Commemorative Coin Legacy Kit project.
+
+## Overview
+
 A quick reference for the review and publishing workflow for the UAE 1972-2025 Commemorative Coin Legacy Kit.
 
 ## 📝 Before You Publish - Essential Steps

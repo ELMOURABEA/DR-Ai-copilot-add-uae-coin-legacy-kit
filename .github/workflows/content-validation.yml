@@ -196,7 +196,7 @@ jobs:
         )
         
         for pattern in "${PATTERNS[@]}"; do
-          if grep -rin "$pattern" . --exclude-dir=.git --exclude-dir=node_modules --exclude="*.yml" --exclude="*.yaml" --exclude="content-validation.yml"; then
+          if grep -rin "$pattern" . --exclude-dir=.git --exclude-dir=node_modules --exclude="*.yml" --exclude="*.yaml"; then
             echo "⚠️ Warning: Found potential sensitive pattern: $pattern"
             ISSUES=$((ISSUES + 1))
           fi
