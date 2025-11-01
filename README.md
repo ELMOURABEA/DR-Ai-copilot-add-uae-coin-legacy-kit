@@ -158,6 +158,8 @@ May the spirit of the Union continue to inspire a future of unparalleled greatne
 
 This project requires careful review and validation before any content is published or submitted to official UAE government channels.
 
+> **🔖 Quick Start:** See [QUICK_REFERENCE.md](QUICK_REFERENCE.md) for a quick overview of the review and publishing process.
+
 ### Pre-Publication Requirements
 
 **Before publishing or submitting to government:**
@@ -178,6 +180,7 @@ All content undergoes:
 
 ### Documentation
 
+- [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Quick reference guide for the review process
 - [REVIEW_CHECKLIST.md](REVIEW_CHECKLIST.md) - Complete checklist for pre-publication validation
 - [PUBLISHING_GUIDELINES.md](PUBLISHING_GUIDELINES.md) - Procedures for official government submission
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Guidelines for contributing to this project
@@ -189,6 +192,7 @@ All content undergoes:
 ```
 .
 ├── README.md                           # This file - Project overview
+├── QUICK_REFERENCE.md                  # Quick reference for review process
 ├── REVIEW_CHECKLIST.md                 # Pre-publication validation checklist
 ├── PUBLISHING_GUIDELINES.md            # Official submission procedures
 ├── CONTRIBUTING.md                     # Contribution guidelines

@@ -47,16 +47,22 @@ jobs:
         for file in $(find . -name '*.md' -not -path './node_modules/*'); do
           echo "Checking $file..."
           
-          # Check for unmatched brackets
-          if grep -n '\[.*\]([^)]*)$' "$file"; then
-            echo "ERROR: Unmatched brackets in $file"
+          # Check for empty link text with brackets
+          if grep -n '\[\]' "$file"; then
+            echo "ERROR: Empty link text in $file"
             ERRORS=$((ERRORS + 1))
           fi
           
-          # Check for broken image references (basic check)
+          # Check for broken image references (empty parentheses)
           if grep -n '!\[.*\]()' "$file"; then
             echo "ERROR: Empty image reference in $file"
             ERRORS=$((ERRORS + 1))
+          fi
+          
+          # Check for unclosed code blocks
+          BACKTICK_COUNT=$(grep -o '```' "$file" | wc -l)
+          if [ $((BACKTICK_COUNT % 2)) -ne 0 ]; then
+            echo "WARNING: Possible unclosed code block in $file"
           fi
         done
         
