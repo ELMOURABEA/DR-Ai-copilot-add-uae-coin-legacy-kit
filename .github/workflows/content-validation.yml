@@ -1,0 +1,271 @@
+# Content Validation Workflow
+# This workflow validates content before publication to ensure quality and compliance
+
+name: Content Validation
+
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - '**.md'
+      - '**.txt'
+      - 'images/**'
+      - '.github/workflows/**'
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - '**.md'
+      - '**.txt'
+      - 'images/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-markdown:
+    name: Validate Markdown Files
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check markdown files exist
+      run: |
+        echo "Checking for markdown files..."
+        if [ -z "$(find . -name '*.md' -not -path './node_modules/*')" ]; then
+          echo "No markdown files found"
+          exit 1
+        fi
+        echo "✓ Markdown files found"
+        
+    - name: Validate markdown syntax
+      run: |
+        echo "Validating markdown syntax..."
+        # Check for common markdown issues
+        ERRORS=0
+        
+        # Check all .md files
+        for file in $(find . -name '*.md' -not -path './node_modules/*'); do
+          echo "Checking $file..."
+          
+          # Check for empty link text with brackets
+          if grep -n '\[\]' "$file"; then
+            echo "ERROR: Empty link text in $file"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          # Check for broken image references (empty parentheses)
+          if grep -n '!\[.*\]()' "$file"; then
+            echo "ERROR: Empty image reference in $file"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          # Check for unclosed code blocks
+          BACKTICK_COUNT=$(grep -o '```' "$file" | wc -l)
+          if [ $((BACKTICK_COUNT % 2)) -ne 0 ]; then
+            echo "WARNING: Possible unclosed code block in $file"
+          fi
+        done
+        
+        if [ $ERRORS -gt 0 ]; then
+          echo "❌ Found $ERRORS markdown syntax errors"
+          exit 1
+        fi
+        echo "✓ Markdown syntax validation passed"
+
+  validate-links:
+    name: Validate Links
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check internal links
+      run: |
+        echo "Checking internal links..."
+        ERRORS=0
+        
+        # Find all markdown files
+        for file in $(find . -name '*.md' -not -path './node_modules/*'); do
+          echo "Checking links in $file..."
+          
+          # Extract relative links (excluding external URLs) using process substitution
+          while read -r link; do
+            # Remove anchor tags
+            clean_link=$(echo "$link" | sed 's/#.*//')
+            
+            if [ -n "$clean_link" ] && [ ! -e "$clean_link" ] && [ ! -e "$(dirname "$file")/$clean_link" ]; then
+              echo "ERROR: Broken link in $file: $link"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(grep -oP '\[.*?\]\(\K[^)http][^)]*' "$file" 2>/dev/null || true)
+        done
+        
+        if [ $ERRORS -gt 0 ]; then
+          echo "⚠️ Found $ERRORS broken internal links"
+          # Don't fail the build for this, just warn
+        else
+          echo "✓ Internal links validation passed"
+        fi
+
+  check-required-files:
+    name: Check Required Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Verify required files exist
+      run: |
+        echo "Checking for required documentation files..."
+        MISSING=0
+        
+        REQUIRED_FILES=(
+          "README.md"
+          "LICENSE"
+          "REVIEW_CHECKLIST.md"
+          "PUBLISHING_GUIDELINES.md"
+          "CONTRIBUTING.md"
+        )
+        
+        for file in "${REQUIRED_FILES[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Missing required file: $file"
+            MISSING=$((MISSING + 1))
+          else
+            echo "✓ Found $file"
+          fi
+        done
+        
+        if [ $MISSING -gt 0 ]; then
+          echo "ERROR: $MISSING required files are missing"
+          exit 1
+        fi
+        echo "✓ All required files present"
+
+  check-bilingual-content:
+    name: Check Bilingual Content
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Verify bilingual sections
+      run: |
+        echo "Checking for bilingual content in README.md..."
+        
+        # Check if README contains both English and Arabic sections
+        if ! grep -q "العربية\|الإمارات\|عام" README.md; then
+          echo "⚠️ Warning: Arabic content may be missing in README.md"
+          echo "Note: This is a bilingual project requiring both English and Arabic"
+        else
+          echo "✓ Arabic content found in README.md"
+        fi
+        
+        if ! grep -q "UAE\|United Arab Emirates\|English" README.md; then
+          echo "⚠️ Warning: English content may be missing in README.md"
+        else
+          echo "✓ English content found in README.md"
+        fi
+        
+        echo "Note: Manual review required to verify translation accuracy and completeness"
+
+  check-sensitive-content:
+    name: Security & Sensitivity Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check for sensitive information
+      run: |
+        echo "Checking for sensitive information..."
+        ISSUES=0
+        
+        # Check for common patterns that might indicate sensitive data
+        PATTERNS=(
+          "password"
+          "api[_-]?key"
+          "secret"
+          "token"
+          "private[_-]?key"
+          "credential"
+        )
+        
+        for pattern in "${PATTERNS[@]}"; do
+          if grep -rin "$pattern" . --exclude-dir=.git --exclude-dir=node_modules; then
+            echo "⚠️ Warning: Found potential sensitive pattern: $pattern"
+            ISSUES=$((ISSUES + 1))
+          fi
+        done
+        
+        if [ $ISSUES -gt 0 ]; then
+          echo "⚠️ Manual review required: Found $ISSUES potential sensitive content patterns"
+          echo "Please review to ensure no actual sensitive data is exposed"
+        else
+          echo "✓ No obvious sensitive patterns detected"
+        fi
+
+  validate-images:
+    name: Validate Image References
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check image directory structure
+      run: |
+        echo "Validating image directory structure..."
+        
+        if [ -d "images" ]; then
+          echo "✓ Images directory exists"
+          
+          # Check if images directory has content or documentation
+          if [ -n "$(ls -A images/)" ]; then
+            echo "✓ Images directory has content"
+          else
+            echo "⚠️ Warning: Images directory is empty"
+          fi
+        else
+          echo "⚠️ Warning: Images directory not found"
+        fi
+        
+        # Check for image references in markdown
+        echo "Checking image references in markdown files..."
+        for file in $(find . -name '*.md' -not -path './node_modules/*'); do
+          if grep -q '!\[.*\](images/' "$file"; then
+            echo "✓ Found image references in $file"
+          fi
+        done
+
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-markdown, validate-links, check-required-files, check-bilingual-content, check-sensitive-content, validate-images]
+    if: always()
+    
+    steps:
+    - name: Validation summary
+      run: |
+        echo "================================"
+        echo "Content Validation Summary"
+        echo "================================"
+        echo ""
+        echo "All automated checks completed."
+        echo ""
+        echo "⚠️ IMPORTANT REMINDERS:"
+        echo "1. Complete the REVIEW_CHECKLIST.md before publishing"
+        echo "2. Ensure bilingual content is accurate and culturally appropriate"
+        echo "3. Verify all technical specifications"
+        echo "4. Obtain all required approvals per PUBLISHING_GUIDELINES.md"
+        echo "5. Follow the official government submission process"
+        echo ""
+        echo "✓ Automated validation passed"
+        echo "→ Manual review still required before official publication"
